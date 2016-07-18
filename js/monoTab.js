@@ -31,25 +31,31 @@ $(document).ready(function() {
     var listHtml = createList(id, title, '', 0)
 
     $('.lists-container').append(listHtml)
+
     // Setup the list with drag/drop
     drake.containers.push(document.getElementById(id))
+
     // Set lists-container width
     handleContainerWidth()
+
     // Push new list into navigation
     var newNavBtn = createNavBtn([id, title])
     $('.nav-btns').append(newNavBtn)
+
     // Click the new button to bring it into view
     $('[data-list='+ id +']').click()
+
+    // Show nav if there are more than 3 lists
+    showNavAsNeeded()
   }
 
-})
-// End On Ready
+}) // End On Ready
 
 /*
     ———————— GLOBAL STATE ————————
 */
-
 var s = {
+  linkTotal: 0,
   mouseIsDown: false,
   pageWidth: undefined
 }
@@ -57,7 +63,6 @@ var s = {
 /*
     ———————— FUNCTIONS ————————
 */
-
 function handleMouseMove(e) {
   if (s.mouseIsDown) {
     s.pageWidth ? s.pageWidth : s.pageWidth = $('body').width()
@@ -200,8 +205,6 @@ function saveSort(el) {
       var $this = $(this)
       var listId = $this.attr('id')
 
-      console.log(listId);
-
       var sortedLinks = []
       $this.find('.link').each(function() {
         var $this = $(this)
@@ -233,13 +236,25 @@ function saveSort(el) {
       }
     })
 
+
     // Set lists-container width
     handleContainerWidth()
 
     chrome.storage.sync.set({'monotabdata': JSON.stringify(fullSet)})
 
     updateCountsOnSort()
+
+    showNavAsNeeded()
   })
+}
+
+// Only show nav if there are three or more lists
+function showNavAsNeeded() {
+  if ($('.nav-btn').length > 2) {
+    $('.nav-btns').show()
+  } else {
+    $('.nav-btns').hide()
+  }
 }
 
 // Used for testing
@@ -306,10 +321,14 @@ function setupLinks(drake) {
 
     // Add navigation buttons to navbar
     var navBtns = listInfoForNav.map(createNavBtn)
-    $('.nav-btns').append(navBtns)
+    var navHolster = $('.nav-btns')
+
+    navHolster.append(navBtns)
+
+    // If we have less than 3 lists don't show nav buttons.
+    showNavAsNeeded()
 
     $('.spinner').hide()
-
   })
 }
 
@@ -381,7 +400,6 @@ function updateCountsOnSort() {
 }
 
 function setCount(countToChange, newCount) {
-  console.log(countToChange);
   countToChange.addClass('exit-up')
 
   setTimeout(function() {
