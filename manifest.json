@@ -1,0 +1,38 @@
+{
+  "manifest_version": 2,
+
+  "name": "MonoTab",
+  "description": "Save your RAM. Tabs under control",
+  "version": "0.01",
+
+  "icons": {
+    "16": "./img/icon_16.png",
+    "32": "./img/icon_32.png",
+    "64": "./img/icon.png"
+  },
+
+  "browser_action": {
+    "default_icon": "./img/icon.png",
+    "default_title": "Save Tab"
+  },
+  "chrome_url_overrides": {
+    "newtab": "monotab.html"
+  },
+
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "https://ajax.googleapis.com/"
+  ],
+
+  "background": {
+    "scripts": ["./js/background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["./js/content.js"]
+    }
+  ]
+}

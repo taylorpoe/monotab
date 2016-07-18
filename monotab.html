@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MonoTab</title>
+  <link rel="stylesheet" href="./styles/vendor/reset.css">
+  <link rel="stylesheet" href="./styles/vendor/dragula.css">
+  <link rel="stylesheet" href="./styles/monotab.css">
+  <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,700,500,600,200,800' rel='stylesheet' type='text/css'>
+  <script type="text/javascript" src="./js/vendor/jquery-3.0.0.min.js"></script>
+  <script type="text/javascript" src="./js/vendor/easing.js"></script>
+  <script type="text/javascript" src="./js/helpers.js"></script>
+  <script type="text/javascript" src="./js/monoTab.js"></script>
+</head>
+<body>
+  <div class="loader"></div>
+  <div class="load-bar"></div>
+
+  <div class="top">
+    <textarea id="header-text" spellcheck="false"></textarea>
+  </div>
+
+  <div class="lists-container-housing">
+    <div class="lists-container">
+      <div class="spinner"></div>
+      <img class="empty-state" src="./img/deadstate.png" alt="no lists" style="display:none;">
+    </div>
+  </div>
+
+  <div class="navbar">
+    <div class="lasso-container">
+      <div class="nav-btns"></div>
+      <button type="button" class="primary add-list">&plus;</button>
+      <button type="button" class="primary hi">?</button>
+    </div>
+  </div>
+
+  <div class="scrim" style="display:none;">
+    <div class="modal">
+      <h1>MonoTab</h1>
+      <div class="v-center">
+        <p>Is a free app made by an</p>
+        <p>independent designer/developer</p>
+        <a href="">Send a coffee</a>
+        <a href="http://twitter.com/taylorpoe">Say hi on Twitter</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="./js/vendor/dragula.min.js"></script>
+</body>
+</html>
