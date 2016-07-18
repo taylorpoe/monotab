@@ -1,6 +1,6 @@
 
 # Dev Setup
-* Cloning the repo
+* Clone the repo
 * Navigate your Chrome browser to `chrome://extensions/`
 * Click `Load Unpacked Extension` button at the top and select monoTab folder
 * Make sure it is 'enabled' after loading it
