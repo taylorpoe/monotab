@@ -179,6 +179,10 @@ function deleteLink(linkId, listId) {
   var listCountEl = list.closest('.list').find('.count')
   var newCount = list.find('.link').length - 1
 
+  // decrement state object
+  s.linkTotal -= 1
+  showAddBtnAsNeeded()
+
   setCount(listCountEl, newCount)
 
   chrome.storage.sync.get('monotabdata', function(tabsArray) {
@@ -257,6 +261,15 @@ function showNavAsNeeded() {
   }
 }
 
+// Only show add-list button if there is more than one link in state
+function showAddBtnAsNeeded() {
+  if (s.linkTotal > 1) {
+    $('.add-list').show()
+  } else {
+    $('.add-list').hide()
+  }
+}
+
 // Used for testing
 function whatIsStateNow() {
   chrome.storage.sync.get('monotabdata', function(tabsObj) {
@@ -294,6 +307,8 @@ function setupLinks(drake) {
       if (listId !== 'titles') {
         $.each(list, function(y, linkObj) {
           linksObjs.push(linkObj)
+          // update links total in state object
+          s.linkTotal += 1
         })
 
         // Map over our array of link objects and turn them into html
@@ -325,8 +340,11 @@ function setupLinks(drake) {
 
     navHolster.append(navBtns)
 
-    // If we have less than 3 lists don't show nav buttons.
+    // If we have less than 3 lists don't show nav buttons
     showNavAsNeeded()
+
+    // If we have only one link item we hide the add-list button
+    showAddBtnAsNeeded()
 
     $('.spinner').hide()
   })
