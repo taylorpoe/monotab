@@ -1,17 +1,5 @@
 #CHANGELOG:
 ### Progress log prior to git setup
----
-
-## Current Goal
-* Fix naming conventions
-
-## Next Goal
-* Setup github
-* Max at 7 lists
-* Handle inbox zero
-* If was last item on list and opened, or deleted last
-* Only show nav if more than two lists
-* Only show add list button if more than one link exists
 
 ---
 # 58 Hours Spent
