@@ -141,16 +141,15 @@ function handleLinkClick(e) {
   var listId = link.closest('.links-list').attr('id')
   var animationTime = 190
 
+  if (e.metaKey && e.shiftKey || (e.ctrlKey && e.shiftKey)) {
+    return true
+  }
+
   deleteLink(linkId, listId)
   link.slideUp(animationTime)
 
   if (e.metaKey || e.ctrlKey) {
-    // Check if current banner open if so slideUp()
-    // Put link.text() variable
-    // Slide down new banner w  link text and message that it was opened in new
-    // tab
-
-    // $('banner')
+    return true
   } else {
     $('.loader').fadeIn(animationTime+170)
     $('.load-bar').addClass('gotime')
