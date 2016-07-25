@@ -138,23 +138,34 @@ function handleDeleterClick(e) {
 function handleLinkClick(e) {
   var link = $(this)
   var linkId = link.data('link-id')
-  var listId = link.closest('.links-list').attr('id')
+  var list = link.closest('.links-list')
+  var listId = list.attr('id')
   var animationTime = 190
+  var listLength = list[0].childElementCount
 
   if (e.metaKey && e.shiftKey || (e.ctrlKey && e.shiftKey)) {
     return true
   }
 
-  deleteLink(linkId, listId)
   link.slideUp(animationTime)
+  deleteLink(linkId, listId)
+  link.remove()
 
   if (e.metaKey || e.ctrlKey) {
+    // If there's only one and we're opening via meta key then remove the list
+    // from the UI as we do when after sorting if a list is empty
+    if (listLength === 1) {
+      list.closest('.list').remove()
+      $('[data-list=' + listId + ']').remove()
+      handleContainerWidth()
+      showNavAsNeeded()
+      showAddBtnAsNeeded()
+    }
     return true
-  } else {
-    $('.loader').fadeIn(animationTime+170)
-    $('.load-bar').addClass('gotime')
   }
 
+  $('.loader').fadeIn(animationTime+170)
+  $('.load-bar').addClass('gotime')
 }
 
 function handleNavClick() {
