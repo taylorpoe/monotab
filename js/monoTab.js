@@ -26,9 +26,16 @@ $(document).ready(function() {
   $('body').on('mousemove', handleMouseMove)
 
   function handleAddList() {
+    var listsCount = $('.list').length
     var title = h.gimmeListName()
     var id = Date.now().toString()
     var listHtml = createList(id, title, '', 0)
+
+    // Only allow 7 lists
+    if (listsCount > 6) {
+      showBanner("You've pushed it to the limit.")
+      return false
+    }
 
     $('.lists-container').append(listHtml)
 
@@ -63,6 +70,32 @@ var s = {
 /*
     ———————— FUNCTIONS ————————
 */
+function showBanner(bannerText) {
+  var bannerBall = $('.banner-ball')
+  var banner = $('.banner')
+
+  bannerBall
+    .fadeIn(60)
+    .addClass('yo')
+
+  setTimeout(function() {
+    banner
+      .text(bannerText)
+      .fadeIn(120)
+
+  }, 275)
+
+  setTimeout(function() {
+    banner
+      .fadeOut(200)
+
+    bannerBall
+      .hide()
+      .removeClass('yo')
+
+  }, 2000)
+}
+
 function handleMouseMove(e) {
   if (s.mouseIsDown) {
     s.pageWidth ? s.pageWidth : s.pageWidth = $('body').width()
