@@ -1,5 +1,4 @@
 /*ColorDocs
-  Focus Pink: #DC9393
   Darkest: #0e0d1a;
   White: #efeff3;
   tooltip: #514D69;
@@ -56,6 +55,38 @@ body {
   background-image: linear-gradient(-143deg, #524f6c 7%, #34324A 100%);
   position: relative;
   font-family: 'Work Sans', sans-serif;
+  overflow: hidden;
+}
+
+.banner {
+  display: none;
+  z-index: 21;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  line-height: 100vh;
+  background-color: #efeff3;
+  font-weight: 800;
+  font-size: 79px;
+  text-align: center;
+}
+
+.banner-ball {
+  display: none;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  background-color: #efeff3;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  z-index: 20;
+  transition: all 275ms ease-in-out;
+  transform: scale(1) translate(-50%, -50%);
+}
+
+.yo {
+  transform: scale(20);
 }
 
 .top {
@@ -122,6 +153,8 @@ body {
   color: #0e0d1a;
   font-size: 13px;
   padding: 7px 20px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
   text-transform: uppercase;
   text-align: center;
   font-weight: 600;
@@ -408,7 +441,7 @@ button.primary {
   position: absolute;
   background-color: #76748C;
   font-size: 23px;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 button.add-list {
@@ -441,7 +474,7 @@ button.nav-btn:last-child {
   font-size: 0;
   display: inline-block;
   border: 2px solid #76748C;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 button.primary:hover {
