@@ -166,16 +166,30 @@ function saveListName() {
 
 }
 
+function checkListCleanup(list, listId) {
+  var listLength = list[0].childElementCount
+
+  if (listLength === 1 && listId != 'defaultList') {
+    list.closest('.list').remove()
+    $('[data-list=' + listId + ']').remove()
+    handleContainerWidth()
+    showNavAsNeeded()
+    showAddBtnAsNeeded()
+  }
+}
+
 function handleDeleterClick(e) {
   e.preventDefault()
   e.stopPropagation()
 
   var link = $(this).closest('a')
   var linkId = link.data('link-id')
-  var listId =  link.closest('.links-list').attr('id')
+  var list = link.closest('.links-list')
+  var listId =  list.attr('id')
 
   deleteLink(linkId, listId)
   link.slideUp(190)
+  checkListCleanup(list, listId)
 }
 
 function handleLinkClick(e) {
@@ -184,7 +198,6 @@ function handleLinkClick(e) {
   var list = link.closest('.links-list')
   var listId = list.attr('id')
   var animationTime = 190
-  var listLength = list[0].childElementCount
 
   if (e.metaKey && e.shiftKey || (e.ctrlKey && e.shiftKey)) {
     return true
@@ -197,13 +210,7 @@ function handleLinkClick(e) {
   if (e.metaKey || e.ctrlKey) {
     // If there's only one and we're opening via meta key then remove the list
     // from the UI as we do when after sorting if a list is empty
-    if (listLength === 1) {
-      list.closest('.list').remove()
-      $('[data-list=' + listId + ']').remove()
-      handleContainerWidth()
-      showNavAsNeeded()
-      showAddBtnAsNeeded()
-    }
+    checkListCleanup(list, listId)
     return true
   }
 
@@ -248,7 +255,7 @@ function deleteLink(linkId, listId) {
 
     currentTabs[listId] = groomedList
 
-    if (currentTabs[listId].length === 0) delete currentTabs[listId]
+    if (currentTabs[listId].length === 0 && listId != 'defaultList') delete currentTabs[listId]
 
     chrome.storage.sync.set({'monotabdata': JSON.stringify(currentTabs)})
   })
