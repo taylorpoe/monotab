@@ -6,7 +6,8 @@ chrome.browserAction.onClicked.addListener(function() {
       id: data[0].id,
       url: data[0].url,
       title: data[0].title,
-      date: gimmeDateString()
+      date: gimmeDateString(),
+      rawDate: new Date().getTime()
     }
     // Add tab to storage
     chrome.storage.sync.get('monotabdata', function(tabsObj) {
