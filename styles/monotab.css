@@ -234,6 +234,7 @@ body {
 }
 
 .lists-container .link:hover {
+  opacity: 1;
   background-color: #0e0d1a;
   z-index: 2;
   color: rgba(255, 255, 255, 1);
@@ -242,6 +243,14 @@ body {
 
 .link:hover .favicon {
   -webkit-filter: invert(1) grayscale(1);
+}
+
+.one-old {
+  opacity: .6;
+}
+
+.three-old {
+  opacity: .3;
 }
 
 .lists-container .link.no-hover-effects:hover .deleter  {
@@ -409,6 +418,16 @@ body {
   padding: 15px;
   padding-left: 15px;
   padding-right: 15px;
+}
+
+.date-warn {
+  color: #d9d8de;
+  background-color: #0d0c19;
+  border-radius: 3px;
+  margin-left: 7px;
+  padding: 4px 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
 }
 
 .lip {

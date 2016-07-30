@@ -64,12 +64,22 @@ $(document).ready(function() {
 var s = {
   linkTotal: 0,
   mouseIsDown: false,
-  pageWidth: undefined
+  pageWidth: undefined,
+  oneWeekAgo: timeDaysAgo(7),
+  threeWeeksAgo: timeDaysAgo(21)
 }
 
 /*
     ———————— FUNCTIONS ————————
 */
+function timeDaysAgo(days) {
+  var date = new Date()
+
+  date.setDate(date.getDate() - days)
+
+  return date.getTime()
+}
+
 function showBanner(bannerText) {
   var bannerBall = $('.banner-ball')
   var banner = $('.banner')
@@ -428,10 +438,22 @@ function createListItems(link) {
   var baseUrl = prettyUrl.split('/')[0]
   var titleTruced = link.title.trunc(47) || 'No Title'
   var date = link.date || 'Date Unknown'
+  var rawDate = link.rawDate || new Date().getTime()
+  var dateWarning = ''
+  var warningClass = ''
   var favicon = '<img width="16" height="16" class="favicon" src="http://www.google.com/s2/favicons?domain=' + baseUrl + '" />'
 
+  // Set up a class the lowers link opacity if is older than 1 or 3 weeks.
+  if (rawDate < s.threeWeeksAgo) {
+    warningClass = 'three-old'
+    dateWarning = '<span class="date-warn">Woah, been here 3 weeks plus!</span>'
+  } else if (rawDate < s.oneWeekAgo) {
+    warningClass = 'one-old'
+    dateWarning = '<span class="date-warn">Over a week old!</span>'
+  }
+
   var linkUI =
-    '<a class="link" data-link-id="' +link.id+'" href="' +link.url+ '" data-date="' +date+ '" data-title="' +link.title+ '">' +
+    '<a class="link ' +warningClass+ '" data-link-id="' +link.id+'" href="' +link.url+ '" data-date="' +date+ '" data-title="' +link.title+ '">' +
     favicon +
     titleTruced +
       '<div class="tooltip">' +
@@ -441,7 +463,7 @@ function createListItems(link) {
         '</div>' +
          '<div class="tooltip-item-wrap">' +
           '<div class="tooltip-title">ADDED</div>' +
-          '<div class="tooltip-data">' +date+ '</div>' +
+          '<div class="tooltip-data">' +date + dateWarning+'</div>' +
         '</div>' +
       '</div>' +
       '<div class="deleter">&times</div>' +
