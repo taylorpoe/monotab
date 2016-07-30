@@ -277,7 +277,7 @@ function saveSort(el) {
       fullSet[listId] = sortedLinks
 
       // Remove list and associated nav-btn if it is empty after sorting
-      if (fullSet[listId].length === 0) {
+      if (fullSet[listId].length === 0 && listId != 'defaultList') {
         var selector = '#' + listId
         $(selector).closest('.list').remove()
         delete fullSet[listId]
