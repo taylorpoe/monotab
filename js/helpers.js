@@ -45,12 +45,12 @@ var h =  {
   gimmeShoutOut: function() {
     var phrase = [
       "Go skip some stones in a swimming pool.",
-      "People are better than links. Go talk to someone.",
+      "People > links. Go hug a person.",
       "You destroyer of worlds.",
       "You warrior, you.",
       "Ka-pow, ka-boom. Axe-kick to the dome.",
       "Time for a taco.",
-      "Thank you! XOXO, Your Ram."
+      "Thank you! XOXO, Your RAM."
     ]
 
     return this.rando(phrase)

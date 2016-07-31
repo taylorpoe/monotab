@@ -175,6 +175,7 @@ function checkListCleanup(list, listId) {
     handleContainerWidth()
     showNavAsNeeded()
     showAddBtnAsNeeded()
+    checkMonoBoxZero()
   }
 }
 
@@ -242,6 +243,7 @@ function deleteLink(linkId, listId) {
   // decrement state object
   s.linkTotal -= 1
   showAddBtnAsNeeded()
+  checkMonoBoxZero()
 
   setCount(listCountEl, newCount)
 
@@ -330,6 +332,21 @@ function showAddBtnAsNeeded() {
   }
 }
 
+function checkMonoBoxZero() {
+  if (s.linkTotal === 0) {
+    $('.links-list').append(
+      '<div class="monozero-wrap">'+
+        '<img src="img/mono-logo.png" height="250" width="250"/>'+
+        '<div class="zero-title">MonoBox Zero</div>'+
+        '<div class="zero-so">' +h.gimmeShoutOut()+ '</div>'+
+      '</div>'
+    )
+    setTimeout(function() {
+      $('.zero-so').addClass('positioner')
+    }, 10)
+  }
+}
+
 // Used for testing
 function whatIsStateNow() {
   chrome.storage.sync.get('monotabdata', function(tabsObj) {
@@ -402,9 +419,10 @@ function setupLinks(drake) {
 
     // If we have less than 3 lists don't show nav buttons
     showNavAsNeeded()
-
     // If we have only one link item we hide the add-list button
     showAddBtnAsNeeded()
+
+    checkMonoBoxZero()
 
     $('.spinner').hide()
   })
