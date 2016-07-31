@@ -96,8 +96,7 @@ function showBanner(bannerText) {
   }, 275)
 
   setTimeout(function() {
-    banner
-      .fadeOut(200)
+    banner.fadeOut(200)
 
     bannerBall
       .hide()
@@ -355,15 +354,20 @@ function whatIsStateNow() {
 }
 
 // TODO: Make onboarding prettier. Maybe step through slider.
-function checkForEmptyState(lists) {
+function checkForEmptyState(lists, hasHadLinks) {
   var listsCount = Object.keys(lists).length
 
-  if (listsCount <= 1 ) {
-    if (listsCount === 1 && lists.titles == undefined) {
+  if (listsCount <= 2 ) {
+    if (listsCount === 2 && lists.titles == undefined) {
       return false
     } else {
-      $('.spinner').hide()
-      $('.empty-state').show()
+      // Show monoBox Zero in lieu of onboarding user has prev saved links
+      if (hasHadLinks) {
+        checkMonoBoxZero()
+      } else {
+        $('.spinner').hide()
+        $('.empty-state').show()
+      }
     }
   }
 }
@@ -371,8 +375,6 @@ function checkForEmptyState(lists) {
 function setupLinks(drake) {
   chrome.storage.sync.get('monotabdata', function(tabsObj) {
     var lists = (Object.keys(tabsObj).length ===  0) ? {} : JSON.parse(tabsObj.monotabdata)
-
-    checkForEmptyState(lists)
 
     var listInfoForNav = []
     // For each list in lists
@@ -386,25 +388,38 @@ function setupLinks(drake) {
           linksObjs.push(linkObj)
           // update links total in state object
           s.linkTotal += 1
+
+          chrome.storage.sync.set({'hasHadLinks': true})
         })
 
-        // Map over our array of link objects and turn them into html
-        var linkHtmlArray = linksObjs.map(createListItems)
-        var linksHtml = linkHtmlArray.join('')
-        // See if a user-saved title exists, if so pass it in for createList
-        var listTitle = lists.titles === undefined
-            ? listId
-            : lists.titles[listId]
+        // If there's been links saved before then do list setup
+        chrome.storage.sync.get('hasHadLinks', function(resp) {
+          if (resp.hasHadLinks) {
 
-        // Setup nav with list titles
-        listInfoForNav.push([listId, listTitle])
+            // Map over our array of link objects and turn them into html
+            var linkHtmlArray = linksObjs.map(createListItems)
+            var linksHtml = linkHtmlArray.join('')
+            // See if a user-saved title exists, if so pass it in for createList
+            var listTitle = lists.titles === undefined
+                ? listId
+                : lists.titles[listId]
 
-        // Create list HTML
-        var listHtml = createList(listId, listTitle, linksHtml, listCount)
-        $('.lists-container').append(listHtml)
+            // Setup nav with list titles
+            listInfoForNav.push([listId, listTitle])
 
-        // Setup the list with drag/drop
-        drake.containers.push(document.getElementById(listId))
+            // Create list HTML
+            var listHtml = createList(listId, listTitle, linksHtml, listCount)
+            $('.lists-container').append(listHtml)
+
+            checkForEmptyState(lists, resp.hasHadLinks)
+
+            // Setup the list with drag/drop
+            drake.containers.push(document.getElementById(listId))
+          } else {
+            // Triggers onboarding
+            checkForEmptyState(lists, false)
+          }
+        })
       }
     })
 
@@ -421,8 +436,6 @@ function setupLinks(drake) {
     showNavAsNeeded()
     // If we have only one link item we hide the add-list button
     showAddBtnAsNeeded()
-
-    checkMonoBoxZero()
 
     $('.spinner').hide()
   })
