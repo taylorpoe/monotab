@@ -336,7 +336,7 @@ function checkMonoBoxZero() {
   if (s.linkTotal === 0) {
     $('.links-list').append(
       '<div class="monozero-wrap">'+
-        '<img src="img/mono-logo.png" height="250" width="250"/>'+
+        '<img src="img/mono-logo.svg" height="220" width="220"/>'+
         '<div class="zero-title">MonoBox Zero</div>'+
         '<div class="zero-so">' +h.gimmeShoutOut()+ '</div>'+
       '</div>'
