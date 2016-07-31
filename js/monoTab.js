@@ -301,7 +301,6 @@ function saveSort(el) {
       }
     })
 
-
     // Set lists-container width
     handleContainerWidth()
 
@@ -424,7 +423,10 @@ function setupLinks(drake) {
     })
 
     // Set lists-container width
-    handleContainerWidth()
+    // TODO: find less jank way to do this — prob pass in lists
+    setTimeout(function(){
+      handleContainerWidth()
+    }, 25)
 
     // Add navigation buttons to navbar
     var navBtns = listInfoForNav.map(createNavBtn)
