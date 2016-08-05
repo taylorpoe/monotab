@@ -400,6 +400,10 @@ function setupLinks(drake) {
     var listsHtml = []
     var listIds = []
 
+    if (tabsObj.monotabdata.length > 7000 ) {
+      console.warn('Saving new tabs might fail due to Chrome\'s limits. Purge your older links to be safe.');
+    }
+
     if (s.hasHadLinks) {
       checkForEmptyState(lists, true)
     } else {
@@ -503,17 +507,18 @@ function createListItems(link) {
   var prettyUrlTrunced = prettyUrl.trunc(47)
   var baseUrl = prettyUrl.split('/')[0]
   var titleTruced = link.title.trunc(47) || 'No Title'
-  var date = link.date || 'Date Unknown'
-  var rawDate = link.rawDate || new Date().getTime()
+  var rawDate = link.rawDate || 'Date Unknown'
+  var digitDate = new Date(link.rawDate).getTime() || new Date().getTime()
+  var date = h.gimmeDateString(rawDate)
   var dateWarning = ''
   var warningClass = ''
   var favicon = '<img width="16" height="16" class="favicon" src="http://www.google.com/s2/favicons?domain=' + baseUrl + '" />'
 
   // Set up a class the lowers link opacity if is older than 1 or 3 weeks.
-  if (rawDate < s.threeWeeksAgo) {
+  if (digitDate < s.threeWeeksAgo) {
     warningClass = 'three-old'
     dateWarning = '<span class="date-warn">Woah, been here 3 weeks plus!</span>'
-  } else if (rawDate < s.oneWeekAgo) {
+  } else if (digitDate < s.oneWeekAgo) {
     warningClass = 'one-old'
     dateWarning = '<span class="date-warn">Over a week old!</span>'
   }

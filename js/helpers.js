@@ -1,6 +1,6 @@
 // helping out
 var h =  {
-  gimmeDateString:  function() {
+  gimmeDateString:  function(time) {
     var monthNames = [
       "Jan", "Feb", "Mar",
       "Apr", "May", "Jun", "Jul",
@@ -8,7 +8,7 @@ var h =  {
       "Nov", "Dec"
     ]
 
-    var date = new Date()
+    var date = new Date(time)
     var day = date.getDate()
     var monthIndex = date.getMonth()
     var year = date.getFullYear()
