@@ -49,8 +49,8 @@ $(document).ready(function() {
     var newNavBtn = createNavBtn([id, title])
     $('.nav-btns').append(newNavBtn)
 
-    // Click the new button to bring it into view
-    $('[data-list='+ id +']').click()
+    // Auto focus on list name for easy editing
+    $('.list').last().find('.title-field').focus()
 
     // Show nav if there are more than 3 lists
     showNavAsNeeded()
