@@ -65,6 +65,7 @@ var s = {
   linkTotal: 0,
   mouseIsDown: false,
   pageWidth: undefined,
+  hasHadLinks: false,
   oneWeekAgo: timeDaysAgo(7),
   threeWeeksAgo: timeDaysAgo(21)
 }
@@ -96,8 +97,7 @@ function showBanner(bannerText) {
   }, 275)
 
   setTimeout(function() {
-    banner
-      .fadeOut(200)
+    banner.fadeOut(200)
 
     bannerBall
       .hide()
@@ -110,9 +110,9 @@ function handleMouseMove(e) {
   if (s.mouseIsDown) {
     s.pageWidth ? s.pageWidth : s.pageWidth = $('body').width()
 
-    if (e.pageX / s.pageWidth > .85) {
+    if (e.pageX / s.pageWidth > .9) {
       startHorzScroll('right')
-    } else if (e.pageX / s.pageWidth < .15) {
+    } else if (e.pageX / s.pageWidth < .1) {
       startHorzScroll('left')
     } else {
       stopHorzScroll()
@@ -166,8 +166,10 @@ function saveListName() {
 
 }
 
-function checkListCleanup(list, listId) {
+function checkListCleanup(list, listId, fromMetaKey) {
   var listLength = list[0].childElementCount
+
+  if (fromMetaKey) { listLength += 1 }
 
   if (listLength === 1 && listId != 'defaultList') {
     list.closest('.list').remove()
@@ -211,7 +213,7 @@ function handleLinkClick(e) {
   if (e.metaKey || e.ctrlKey) {
     // If there's only one and we're opening via meta key then remove the list
     // from the UI as we do when after sorting if a list is empty
-    checkListCleanup(list, listId)
+    checkListCleanup(list, listId, true)
     return true
   }
 
@@ -231,7 +233,14 @@ function handleScrimClick() {
 }
 
 function handleAboutClick() {
-  $('.scrim').fadeIn(225)
+  if ($('.about-open').length === 0) {
+    $('.navbar').addClass('about-open')
+    setTimeout(function(){
+      $('.navbar').removeClass('about-open')
+    }, 7000)
+  } else {
+    $('.navbar').removeClass('about-open')
+  }
 }
 
 function deleteLink(linkId, listId) {
@@ -302,7 +311,6 @@ function saveSort(el) {
       }
     })
 
-
     // Set lists-container width
     handleContainerWidth()
 
@@ -334,16 +342,18 @@ function showAddBtnAsNeeded() {
 
 function checkMonoBoxZero() {
   if (s.linkTotal === 0) {
-    $('.links-list').append(
-      '<div class="monozero-wrap">'+
-        '<img src="img/mono-logo.png" height="250" width="250"/>'+
-        '<div class="zero-title">MonoBox Zero</div>'+
-        '<div class="zero-so">' +h.gimmeShoutOut()+ '</div>'+
-      '</div>'
-    )
     setTimeout(function() {
-      $('.zero-so').addClass('positioner')
-    }, 10)
+      $('.links-list').append(
+        '<div class="monozero-wrap">'+
+          '<img src="img/mono-logo.svg" height="220" width="220"/>'+
+          '<div class="zero-title">MonoBox Zero</div>'+
+          '<div class="zero-so">' +h.gimmeShoutOut()+ '</div>'+
+        '</div>'
+      )
+      setTimeout(function() {
+        $('.zero-so').addClass('positioner')
+      }, 10)
+    }, 50)
   }
 }
 
@@ -355,26 +365,45 @@ function whatIsStateNow() {
 }
 
 // TODO: Make onboarding prettier. Maybe step through slider.
-function checkForEmptyState(lists) {
+function checkForEmptyState(lists, hasHadLinks) {
   var listsCount = Object.keys(lists).length
 
-  if (listsCount <= 1 ) {
-    if (listsCount === 1 && lists.titles == undefined) {
+  if (listsCount <= 2 ) {
+    if (listsCount === 2 && lists.titles == undefined) {
+      return false
+    } else if (lists.defaultList.length > 0) {
       return false
     } else {
-      $('.spinner').hide()
-      $('.empty-state').show()
+      // Show monoBox Zero in lieu of onboarding user has prev saved links
+      if (hasHadLinks) {
+        checkMonoBoxZero()
+      } else {
+        $('.spinner').hide()
+        $('.empty-state').show()
+      }
     }
   }
 }
 
 function setupLinks(drake) {
+  // If there's been links saved before then do list setup
+  chrome.storage.sync.get('hasHadLinks', function(resp) {
+    s.hasHadLinks = resp.hasHadLinks ? true : false
+  })
+
   chrome.storage.sync.get('monotabdata', function(tabsObj) {
     var lists = (Object.keys(tabsObj).length ===  0) ? {} : JSON.parse(tabsObj.monotabdata)
-
-    checkForEmptyState(lists)
-
     var listInfoForNav = []
+    var listsHtml = []
+    var listIds = []
+
+    if (s.hasHadLinks) {
+      checkForEmptyState(lists, true)
+    } else {
+      checkForEmptyState(lists, false)
+      return false
+    }
+
     // For each list in lists
     $.each(lists, function(x, list) {
       var listId = x
@@ -382,6 +411,8 @@ function setupLinks(drake) {
       var linksObjs = []
 
       if (listId !== 'titles') {
+        listIds.push(listId)
+
         $.each(list, function(y, linkObj) {
           linksObjs.push(linkObj)
           // update links total in state object
@@ -401,15 +432,19 @@ function setupLinks(drake) {
 
         // Create list HTML
         var listHtml = createList(listId, listTitle, linksHtml, listCount)
-        $('.lists-container').append(listHtml)
 
-        // Setup the list with drag/drop
-        drake.containers.push(document.getElementById(listId))
+        listsHtml.push(listHtml)
       }
     })
 
+    // Note if we have any links at all to avoid showing onboarding in the future
+    if (s.linkTotal > 0) { chrome.storage.sync.set({'hasHadLinks': true}) }
+
     // Set lists-container width
-    handleContainerWidth()
+    handleContainerWidth(listIds.length)
+
+    listsHtml.join('')
+    $('.lists-container').append(listsHtml)
 
     // Add navigation buttons to navbar
     var navBtns = listInfoForNav.map(createNavBtn)
@@ -422,11 +457,14 @@ function setupLinks(drake) {
     // If we have only one link item we hide the add-list button
     showAddBtnAsNeeded()
 
-    checkMonoBoxZero()
+    // Setup the list with drag/drop
+    listIds.forEach(function(listId) {
+      drake.containers.push(document.getElementById(listId))
+    })
 
     $('.spinner').hide()
   })
-}
+} // Concludes setup lists function
 
 function createNavBtn(array){
   var listId = array[0]
@@ -577,8 +615,10 @@ function resizeHeaderText(e) {
   }
 }
 
-function handleContainerWidth() {
-  var listsCount = $('.list').length
+function handleContainerWidth(listLength) {
+  var listsCount = listLength
+    ? listLength
+    : $('.list').length
 
   if (listsCount > 2) {
     $('.list').css('float', 'left')
