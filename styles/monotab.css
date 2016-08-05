@@ -119,6 +119,7 @@ body {
 .lists-container-housing {
   width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .lists-container {
@@ -212,6 +213,7 @@ body {
   height: 100%;
   overflow-y: auto;
   text-align: center;
+  padding-bottom: 140px;
 }
 
 .links-list .monozero-wrap {
