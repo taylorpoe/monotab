@@ -1,6 +1,9 @@
-
 chrome.browserAction.onClicked.addListener(function() {
   chrome.tabs.query({active: true}, function(data) {
+    // If we're on the chrome new tab page, don't save it
+    if (data[0].url.indexOf('chrome://newtab/') == 0) {
+      return false
+    }
     // Get setup active tab's
     var tabToSave = {
       id: data[0].id,
@@ -16,10 +19,8 @@ chrome.browserAction.onClicked.addListener(function() {
       } else {
         var tmp = JSON.parse(tabsObj.monotabdata)
         if (Object.keys(tmp).length == 0) {
-          console.log('tmp was seen as 0')
           tmp = {'defaultList': [tabToSave]}
         } else if (Object.keys(tmp).length == 1 && tmp.titles !== undefined) {
-          console.log('tmp was seen as 1 and has titles')
           // Mutate tmp to delete titles and save it as the only tab
           tmp = {'defaultList': [tabToSave]}
         } else {
