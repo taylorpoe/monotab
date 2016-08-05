@@ -259,7 +259,7 @@ body {
   display: block;
   position: relative;
   z-index: 1;
-  padding: 9px 25px 11px 25px;
+  padding: 9px 25px;
   margin-top: 2px;
   background-color: transparent;
   cursor: pointer;
