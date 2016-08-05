@@ -15,6 +15,8 @@ $(document).ready(function() {
   $('body').on('click', '.lists-container a', handleLinkClick)
   $('body').on('click', '.nav-btn', handleNavClick)
   $('body').on('click', '.add-list', handleAddList)
+  $('body').on('click', '.delete-all', handleDeleteAll)
+  $('body').on('click', '.expand-all', handleExpandAll)
   $('body').on('click', '.scrim', handleScrimClick)
   $('body').on('click', '.hi', handleAboutClick)
   $('body').on('change blur', '#header-text', saveHeaderText)
@@ -73,6 +75,38 @@ var s = {
 /*
     ———————— FUNCTIONS ————————
 */
+function handleDeleteAll() {
+
+}
+
+function handleExpandAll() {
+  var list = $(this).closest('.list')
+  var listId = list.find('.links-list').attr('id')
+  var links = list.find('.link')
+  var linksToDelete = []
+  var urls = []
+  var aniDur = 100
+
+  links.each(function(i) {
+    var link = $(links[i])
+    var url = link.attr('href')
+    var linkId = link.data('link-id')
+
+    urls.push(url)
+    linksToDelete.push(linkId)
+
+  })
+
+  list.hide()
+  $('[data-list=' + listId + ']').remove()
+  deleteMultipleLinks(linksToDelete, listId)
+  list.remove()
+
+  urls.map(function(url) {
+    chrome.tabs.create({url: url})
+  })
+}
+
 function timeDaysAgo(days) {
   var date = new Date()
 
@@ -244,6 +278,25 @@ function handleAboutClick() {
   } else {
     $('.navbar').removeClass('about-open')
   }
+}
+
+function deleteMultipleLinks(arrayOfLinks, listId) {
+  var linksRemoving = arrayOfLinks.length
+  var listsCount = $('.list').length - 1
+  // decrement state object
+  s.linkTotal -= 1
+  showAddBtnAsNeeded()
+  handleContainerWidth(listsCount)
+  showNavAsNeeded()
+
+  chrome.storage.sync.get('monotabdata', function(tabsArray) {
+    var currentTabs = (tabsArray.monotabdata === null) ? {} : JSON.parse(tabsArray.monotabdata)
+    var listInQuestion = currentTabs[listId]
+
+    delete currentTabs[listId]
+
+    chrome.storage.sync.set({'monotabdata': JSON.stringify(currentTabs)})
+  })
 }
 
 function deleteLink(linkId, listId) {
@@ -489,6 +542,8 @@ function createList(id, title, linksItems, count) {
             '<span class="count">'+ count +'</span>'+
           '</span>'+
         ')</div>'+
+        '<div class="expand-all">+</div>'+
+        '<div class="delete-all">&times</div>'+
       '</div>'+
       '<div class="links-list" id="'+ id +'">'+
         linksItems +

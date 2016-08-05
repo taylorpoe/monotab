@@ -556,6 +556,7 @@ button.primary:hover {
 
 .lasso-container {
   width: 97%;
+  min-height: 13px;
   max-width: 1250px;
   position: relative;
   margin: 0 auto;
@@ -577,4 +578,30 @@ h1 {
   transform: translateY(-50%);
   font-size: 36px;
   line-height: 1.5;
+}
+
+.list-title:hover .expand-all, .list-title:hover .delete-all {
+  opacity: .6;
+}
+
+.expand-all, .delete-all {
+  opacity: 0;
+  position: absolute;
+  right: 7px;
+  top: 9px;
+  cursor: pointer;
+  text-align: center;
+  padding: 1px 4px;
+  border-radius: 50%;
+  background-color: #514D69;
+  color: #76748C;
+}
+
+.expand-all:hover , .delete-all:hover {
+  opacity: 1 !important;
+  color: #efeff3;
+}
+
+.expand-all {
+  right: 28px;
 }
