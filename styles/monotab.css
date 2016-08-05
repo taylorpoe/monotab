@@ -64,11 +64,20 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  line-height: 100vh;
+  line-height: 1;
   background-color: #efeff3;
   font-weight: 800;
   font-size: 79px;
   text-align: center;
+}
+
+.banner-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  min-width: 1000px;
 }
 
 .banner-ball {

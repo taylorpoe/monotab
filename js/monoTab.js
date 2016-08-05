@@ -19,6 +19,7 @@ $(document).ready(function() {
   $('body').on('click', '.expand-all', handleExpandAll)
   $('body').on('click', '.scrim', handleScrimClick)
   $('body').on('click', '.hi', handleAboutClick)
+  $('body').on('click', '.banner', closeBanner)
   $('body').on('change blur', '#header-text', saveHeaderText)
   $('body').on('keydown', '#header-text', resizeHeaderText)
   $('body').on('change blur', '.title-field', saveListName)
@@ -35,7 +36,7 @@ $(document).ready(function() {
 
     // Only allow 7 lists
     if (listsCount > 6) {
-      showBanner("You've pushed it to the limit.")
+      showBanner("You've pushed it to the limit.", 3277)
       return false
     }
 
@@ -121,18 +122,26 @@ function timeDaysAgo(days) {
   return date.getTime()
 }
 
-function showBanner(bannerText) {
+function closeBanner() {
+  $('.banner-ball')
+    .hide()
+    .removeClass('yo')
+
+  $(this).fadeOut(200)
+}
+
+function showBanner(bannerText, dur) {
   var bannerBall = $('.banner-ball')
   var banner = $('.banner')
+  var textSpot = banner.find('.banner-text')
 
   bannerBall
     .fadeIn(60)
     .addClass('yo')
 
   setTimeout(function() {
-    banner
-      .text(bannerText)
-      .fadeIn(120)
+    banner.fadeIn(120)
+    textSpot.text(bannerText)
 
   }, 275)
 
@@ -143,7 +152,7 @@ function showBanner(bannerText) {
       .hide()
       .removeClass('yo')
 
-  }, 2000)
+  }, dur)
 }
 
 function handleMouseMove(e) {
@@ -460,7 +469,7 @@ function setupLinks(drake) {
     var listIds = []
 
     if (tabsObj.monotabdata.length > 7000 ) {
-      console.warn('Saving new tabs might fail due to Chrome\'s limits. Purge your older links to be safe.');
+      showBanner("Saving new tabs might fail due to Chrome\'s limits. Purge your older links to be safe.", 7224)
     }
 
     if (s.hasHadLinks) {
