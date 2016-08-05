@@ -110,9 +110,9 @@ function handleMouseMove(e) {
   if (s.mouseIsDown) {
     s.pageWidth ? s.pageWidth : s.pageWidth = $('body').width()
 
-    if (e.pageX / s.pageWidth > .85) {
+    if (e.pageX / s.pageWidth > .9) {
       startHorzScroll('right')
-    } else if (e.pageX / s.pageWidth < .15) {
+    } else if (e.pageX / s.pageWidth < .1) {
       startHorzScroll('left')
     } else {
       stopHorzScroll()
