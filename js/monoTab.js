@@ -49,8 +49,8 @@ $(document).ready(function() {
     var newNavBtn = createNavBtn([id, title])
     $('.nav-btns').append(newNavBtn)
 
-    // Click the new button to bring it into view
-    $('[data-list='+ id +']').click()
+    // Auto focus on list name for easy editing
+    $('.list').last().find('.title-field').focus()
 
     // Show nav if there are more than 3 lists
     showNavAsNeeded()
@@ -234,10 +234,13 @@ function handleScrimClick() {
 
 function handleAboutClick() {
   if ($('.about-open').length === 0) {
-    $('.navbar').addClass('about-open')
-    setTimeout(function(){
-      $('.navbar').removeClass('about-open')
-    }, 7000)
+    var navbar = $('.navbar')
+
+    navbar.addClass('about-open')
+
+    navbar.on('mouseleave', function() {
+      navbar.removeClass('about-open')
+    })
   } else {
     $('.navbar').removeClass('about-open')
   }
