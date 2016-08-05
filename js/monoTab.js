@@ -76,16 +76,24 @@ var s = {
     ———————— FUNCTIONS ————————
 */
 function handleDeleteAll() {
+  var list = $(this).closest('.list')
+  var listId = list.find('.links-list').attr('id')
+  var links = list.find('.link')
+  var aniDur = 100
 
+  list.fadeOut(aniDur)
+  $('[data-list=' + listId + ']').remove()
+  deleteMultipleLinks(links, listId)
+  setTimeout(function() {
+    list.remove()
+  }, aniDur)
 }
 
 function handleExpandAll() {
   var list = $(this).closest('.list')
   var listId = list.find('.links-list').attr('id')
   var links = list.find('.link')
-  var linksToDelete = []
   var urls = []
-  var aniDur = 100
 
   links.each(function(i) {
     var link = $(links[i])
@@ -93,13 +101,11 @@ function handleExpandAll() {
     var linkId = link.data('link-id')
 
     urls.push(url)
-    linksToDelete.push(linkId)
-
   })
 
   list.hide()
   $('[data-list=' + listId + ']').remove()
-  deleteMultipleLinks(linksToDelete, listId)
+  deleteMultipleLinks(links, listId)
   list.remove()
 
   urls.map(function(url) {
