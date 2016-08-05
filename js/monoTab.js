@@ -234,10 +234,13 @@ function handleScrimClick() {
 
 function handleAboutClick() {
   if ($('.about-open').length === 0) {
-    $('.navbar').addClass('about-open')
-    setTimeout(function(){
-      $('.navbar').removeClass('about-open')
-    }, 7000)
+    var navbar = $('.navbar')
+
+    navbar.addClass('about-open')
+
+    navbar.on('mouseleave', function() {
+      navbar.removeClass('about-open')
+    })
   } else {
     $('.navbar').removeClass('about-open')
   }
