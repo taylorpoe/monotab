@@ -233,7 +233,14 @@ function handleScrimClick() {
 }
 
 function handleAboutClick() {
-  $('.scrim').fadeIn(225)
+  if ($('.about-open').length === 0) {
+    $('.navbar').addClass('about-open')
+    setTimeout(function(){
+      $('.navbar').removeClass('about-open')
+    }, 7000)
+  } else {
+    $('.navbar').removeClass('about-open')
+  }
 }
 
 function deleteLink(linkId, listId) {
