@@ -68,7 +68,7 @@ var s = {
   linkTotal: 0,
   mouseIsDown: false,
   pageWidth: undefined,
-  didOnboarding: false,
+  passedOnboarding: false,
   oneWeekAgo: timeDaysAgo(7),
   threeWeeksAgo: timeDaysAgo(21)
 }
@@ -435,7 +435,7 @@ function whatIsStateNow() {
   })
 }
 
-function checkForEmptyState(lists, didOnboarding) {
+function checkForEmptyState(lists, passedOnboarding) {
   var listsCount = Object.keys(lists).length
 
   if (listsCount <= 2 ) {
@@ -445,7 +445,7 @@ function checkForEmptyState(lists, didOnboarding) {
       return false
     } else {
       // Show monoBox Zero in lieu of onboarding user has prev saved links
-      if (didOnboarding) {
+      if (passedOnboarding) {
         checkMonoBoxZero()
       } else {
         $('.spinner').hide()
@@ -457,8 +457,8 @@ function checkForEmptyState(lists, didOnboarding) {
 
 function setupLinks(drake) {
   // If there's been links saved before then do list setup
-  chrome.storage.sync.get('didOnboarding', function(resp) {
-    s.didOnboarding = resp.didOnboarding ? true : false
+  chrome.storage.sync.get('passedOnboarding', function(resp) {
+    s.passedOnboarding = resp.passedOnboarding ? true : false
   })
 
   chrome.storage.sync.get('monotabdata', function(tabsObj) {
@@ -471,11 +471,13 @@ function setupLinks(drake) {
       showBanner("Saving new tabs might fail due to Chrome\'s limits. Purge your older links to be safe.", 7224)
     }
 
-    if (s.didOnboarding) {
+    if (s.passedOnboarding) {
       checkForEmptyState(lists, true)
     } else {
       checkForEmptyState(lists, false)
-      return false
+      if (lists.defaultList.length === 0 || lists.defaultList == undefined) {
+        return false
+      }
     }
 
     // For each list in lists
@@ -512,7 +514,7 @@ function setupLinks(drake) {
     })
 
     // Note if we have any links at all to avoid showing onboarding in the future
-    if (s.linkTotal > 0) { chrome.storage.sync.set({'didOnboarding': true}) }
+    if (s.linkTotal > 0) { chrome.storage.sync.set({'passedOnboarding': true}) }
 
     // Set lists-container width
     handleContainerWidth(listIds.length)
