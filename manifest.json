@@ -2,8 +2,8 @@
   "manifest_version": 2,
 
   "name": "MonoTab",
-  "description": "Save your RAM. Tabs under control",
-  "version": "2.2",
+  "description": "Get your browser tabs under control; save your RAM",
+  "version": "2.4",
 
   "icons": {
     "16": "./img/icon_16.png",
