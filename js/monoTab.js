@@ -68,7 +68,7 @@ var s = {
   linkTotal: 0,
   mouseIsDown: false,
   pageWidth: undefined,
-  hasHadLinks: false,
+  didOnboarding: false,
   oneWeekAgo: timeDaysAgo(7),
   threeWeeksAgo: timeDaysAgo(21)
 }
@@ -435,18 +435,17 @@ function whatIsStateNow() {
   })
 }
 
-// TODO: Make onboarding prettier. Maybe step through slider.
-function checkForEmptyState(lists, hasHadLinks) {
+function checkForEmptyState(lists, didOnboarding) {
   var listsCount = Object.keys(lists).length
 
   if (listsCount <= 2 ) {
     if (listsCount === 2 && lists.titles == undefined) {
       return false
-    } else if (lists.defaultList.length > 0) {
+    } else if (lists.defaultList && lists.defaultList.length > 0) {
       return false
     } else {
       // Show monoBox Zero in lieu of onboarding user has prev saved links
-      if (hasHadLinks) {
+      if (didOnboarding) {
         checkMonoBoxZero()
       } else {
         $('.spinner').hide()
@@ -458,8 +457,8 @@ function checkForEmptyState(lists, hasHadLinks) {
 
 function setupLinks(drake) {
   // If there's been links saved before then do list setup
-  chrome.storage.sync.get('hasHadLinks', function(resp) {
-    s.hasHadLinks = resp.hasHadLinks ? true : false
+  chrome.storage.sync.get('didOnboarding', function(resp) {
+    s.didOnboarding = resp.didOnboarding ? true : false
   })
 
   chrome.storage.sync.get('monotabdata', function(tabsObj) {
@@ -472,7 +471,7 @@ function setupLinks(drake) {
       showBanner("Saving new tabs might fail due to Chrome\'s limits. Purge your older links to be safe.", 7224)
     }
 
-    if (s.hasHadLinks) {
+    if (s.didOnboarding) {
       checkForEmptyState(lists, true)
     } else {
       checkForEmptyState(lists, false)
@@ -513,7 +512,7 @@ function setupLinks(drake) {
     })
 
     // Note if we have any links at all to avoid showing onboarding in the future
-    if (s.linkTotal > 0) { chrome.storage.sync.set({'hasHadLinks': true}) }
+    if (s.linkTotal > 0) { chrome.storage.sync.set({'didOnboarding': true}) }
 
     // Set lists-container width
     handleContainerWidth(listIds.length)

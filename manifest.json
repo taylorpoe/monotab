@@ -3,7 +3,7 @@
 
   "name": "MonoTab",
   "description": "Save your RAM. Tabs under control",
-  "version": "2.1",
+  "version": "2.2",
 
   "icons": {
     "16": "./img/icon_16.png",
