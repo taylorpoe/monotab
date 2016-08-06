@@ -467,7 +467,7 @@ function setupLinks(drake) {
     var listsHtml = []
     var listIds = []
 
-    if (tabsObj.monotabdata.length > 7000 ) {
+    if (tabsObj.monotabdata && tabsObj.monotabdata.length > 7000 ) {
       showBanner("Saving new tabs might fail due to Chrome\'s limits. Purge your older links to be safe.", 7224)
     }
 
