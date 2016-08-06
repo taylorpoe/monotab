@@ -1,5 +1,5 @@
 chrome.browserAction.onClicked.addListener(function() {
-  chrome.tabs.query({active: true}, function(data) {
+  chrome.tabs.query({active: true, currentWindow: true}, function(data) {
     // If we're on the chrome new tab page, don't save it
     if (data[0].url.indexOf('chrome://newtab/') == 0) {
       return false
