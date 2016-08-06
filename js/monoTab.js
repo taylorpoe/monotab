@@ -36,7 +36,7 @@ $(document).ready(function() {
 
     // Only allow 7 lists
     if (listsCount > 6) {
-      showBanner("You've pushed it to the limit.", 3277)
+      showBanner("You've pushed it to the limit.", 2677)
       return false
     }
 
@@ -557,8 +557,8 @@ function createList(id, title, linksItems, count) {
             '<span class="count">'+ count +'</span>'+
           '</span>'+
         ')</div>'+
-        '<div class="expand-all">+</div>'+
-        '<div class="delete-all">&times</div>'+
+        '<div class="expand-all" title="Open all links">+</div>'+
+        '<div class="delete-all" title="Nuke entire list">&times</div>'+
       '</div>'+
       '<div class="links-list" id="'+ id +'">'+
         linksItems +
