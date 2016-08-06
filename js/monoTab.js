@@ -15,8 +15,11 @@ $(document).ready(function() {
   $('body').on('click', '.lists-container a', handleLinkClick)
   $('body').on('click', '.nav-btn', handleNavClick)
   $('body').on('click', '.add-list', handleAddList)
+  $('body').on('click', '.delete-all', handleDeleteAll)
+  $('body').on('click', '.expand-all', handleExpandAll)
   $('body').on('click', '.scrim', handleScrimClick)
   $('body').on('click', '.hi', handleAboutClick)
+  $('body').on('click', '.banner', closeBanner)
   $('body').on('change blur', '#header-text', saveHeaderText)
   $('body').on('keydown', '#header-text', resizeHeaderText)
   $('body').on('change blur', '.title-field', saveListName)
@@ -33,7 +36,7 @@ $(document).ready(function() {
 
     // Only allow 7 lists
     if (listsCount > 6) {
-      showBanner("You've pushed it to the limit.")
+      showBanner("You've pushed it to the limit.", 3277)
       return false
     }
 
@@ -73,6 +76,44 @@ var s = {
 /*
     ———————— FUNCTIONS ————————
 */
+function handleDeleteAll() {
+  var list = $(this).closest('.list')
+  var listId = list.find('.links-list').attr('id')
+  var links = list.find('.link')
+  var aniDur = 100
+
+  list.fadeOut(aniDur)
+  $('[data-list=' + listId + ']').remove()
+  deleteMultipleLinks(links, listId)
+  setTimeout(function() {
+    list.remove()
+  }, aniDur)
+}
+
+function handleExpandAll() {
+  var list = $(this).closest('.list')
+  var listId = list.find('.links-list').attr('id')
+  var links = list.find('.link')
+  var urls = []
+
+  links.each(function(i) {
+    var link = $(links[i])
+    var url = link.attr('href')
+    var linkId = link.data('link-id')
+
+    urls.push(url)
+  })
+
+  list.hide()
+  $('[data-list=' + listId + ']').remove()
+  deleteMultipleLinks(links, listId)
+  list.remove()
+
+  urls.map(function(url) {
+    chrome.tabs.create({url: url})
+  })
+}
+
 function timeDaysAgo(days) {
   var date = new Date()
 
@@ -81,18 +122,26 @@ function timeDaysAgo(days) {
   return date.getTime()
 }
 
-function showBanner(bannerText) {
+function closeBanner() {
+  $('.banner-ball')
+    .hide()
+    .removeClass('yo')
+
+  $(this).fadeOut(200)
+}
+
+function showBanner(bannerText, dur) {
   var bannerBall = $('.banner-ball')
   var banner = $('.banner')
+  var textSpot = banner.find('.banner-text')
 
   bannerBall
     .fadeIn(60)
     .addClass('yo')
 
   setTimeout(function() {
-    banner
-      .text(bannerText)
-      .fadeIn(120)
+    banner.fadeIn(120)
+    textSpot.text(bannerText)
 
   }, 275)
 
@@ -103,7 +152,7 @@ function showBanner(bannerText) {
       .hide()
       .removeClass('yo')
 
-  }, 2000)
+  }, dur)
 }
 
 function handleMouseMove(e) {
@@ -244,6 +293,25 @@ function handleAboutClick() {
   } else {
     $('.navbar').removeClass('about-open')
   }
+}
+
+function deleteMultipleLinks(arrayOfLinks, listId) {
+  var linksRemoving = arrayOfLinks.length
+  var listsCount = $('.list').length - 1
+  // decrement state object
+  s.linkTotal -= 1
+  showAddBtnAsNeeded()
+  handleContainerWidth(listsCount)
+  showNavAsNeeded()
+
+  chrome.storage.sync.get('monotabdata', function(tabsArray) {
+    var currentTabs = (tabsArray.monotabdata === null) ? {} : JSON.parse(tabsArray.monotabdata)
+    var listInQuestion = currentTabs[listId]
+
+    delete currentTabs[listId]
+
+    chrome.storage.sync.set({'monotabdata': JSON.stringify(currentTabs)})
+  })
 }
 
 function deleteLink(linkId, listId) {
@@ -400,6 +468,10 @@ function setupLinks(drake) {
     var listsHtml = []
     var listIds = []
 
+    if (tabsObj.monotabdata.length > 7000 ) {
+      showBanner("Saving new tabs might fail due to Chrome\'s limits. Purge your older links to be safe.", 7224)
+    }
+
     if (s.hasHadLinks) {
       checkForEmptyState(lists, true)
     } else {
@@ -485,6 +557,8 @@ function createList(id, title, linksItems, count) {
             '<span class="count">'+ count +'</span>'+
           '</span>'+
         ')</div>'+
+        '<div class="expand-all">+</div>'+
+        '<div class="delete-all">&times</div>'+
       '</div>'+
       '<div class="links-list" id="'+ id +'">'+
         linksItems +
@@ -503,17 +577,18 @@ function createListItems(link) {
   var prettyUrlTrunced = prettyUrl.trunc(47)
   var baseUrl = prettyUrl.split('/')[0]
   var titleTruced = link.title.trunc(47) || 'No Title'
-  var date = link.date || 'Date Unknown'
-  var rawDate = link.rawDate || new Date().getTime()
+  var rawDate = link.rawDate || 'Date Unknown'
+  var digitDate = new Date(link.rawDate).getTime() || new Date().getTime()
+  var date = h.gimmeDateString(rawDate)
   var dateWarning = ''
   var warningClass = ''
   var favicon = '<img width="16" height="16" class="favicon" src="http://www.google.com/s2/favicons?domain=' + baseUrl + '" />'
 
   // Set up a class the lowers link opacity if is older than 1 or 3 weeks.
-  if (rawDate < s.threeWeeksAgo) {
+  if (digitDate < s.threeWeeksAgo) {
     warningClass = 'three-old'
     dateWarning = '<span class="date-warn">Woah, been here 3 weeks plus!</span>'
-  } else if (rawDate < s.oneWeekAgo) {
+  } else if (digitDate < s.oneWeekAgo) {
     warningClass = 'one-old'
     dateWarning = '<span class="date-warn">Over a week old!</span>'
   }

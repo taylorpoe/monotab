@@ -9,8 +9,7 @@ chrome.browserAction.onClicked.addListener(function() {
       id: data[0].id,
       url: data[0].url,
       title: data[0].title,
-      date: gimmeDateString(),
-      rawDate: new Date().getTime()
+      rawDate: new Date()
     }
     // Add tab to storage
     chrome.storage.sync.get('monotabdata', function(tabsObj) {
@@ -35,23 +34,6 @@ chrome.browserAction.onClicked.addListener(function() {
     chrome.tabs.remove(data[0].id)
   })
 })
-
-function gimmeDateString() {
-  // Dates!
-  var monthNames = [
-    "Jan", "Feb", "Mar",
-    "Apr", "May", "Jun", "Jul",
-    "Aug", "Sep", "Oct",
-    "Nov", "Dec"
-  ]
-
-  var date = new Date()
-  var day = date.getDate()
-  var monthIndex = date.getMonth()
-  var year = date.getFullYear()
-
-  return day + ' ' + monthNames[monthIndex] + ' ' + year
-}
 
 function extend(a, b){
   for(var key in b)
