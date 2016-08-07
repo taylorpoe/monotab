@@ -178,6 +178,11 @@ body {
   font-size: 13px;
   font-weight: 600;
   max-width: 400px;
+  min-width: 40px;
+}
+
+[contenteditable=true]:empty:before {
+  content: attr(placeholder);
 }
 
 .title-field:hover {
