@@ -308,7 +308,11 @@ function deleteMultipleLinks(arrayOfLinks, listId) {
     var currentTabs = (tabsArray.monotabdata === null) ? {} : JSON.parse(tabsArray.monotabdata)
     var listInQuestion = currentTabs[listId]
 
-    delete currentTabs[listId]
+    if (listId === 'defaultList') {
+      currentTabs[listId] = []
+    } else {
+      delete currentTabs[listId]
+    }
 
     chrome.storage.sync.set({'monotabdata': JSON.stringify(currentTabs)})
   })
