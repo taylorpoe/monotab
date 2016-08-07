@@ -185,6 +185,10 @@ body {
   content: attr(placeholder);
 }
 
+[contenteditable=true]:focus:empty:before {
+  content: 'Start Typing';
+}
+
 .title-field:hover {
   color: #28263e;
 }
