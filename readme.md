@@ -1,9 +1,33 @@
 
-# Dev Setup
-* Clone the repo
-* Navigate your Chrome browser to `chrome://extensions/`
-* Click `Load Unpacked Extension` button at the top and select monoTab folder
-* Make sure it is 'enabled' after loading it
+# Contributing
+
+#### App Details
+* jQuery, CSS, HTML
+
+#### Dev Setup
+1. Fork the project and get set up locally
+2. In your browser navigate to `chrome://extensions/`
+3. Click the `Load packed extension` _(You might need to compress/zip the folder first — I can't remember)_
+4. Make sure it is 'enabled' after loading it
+5. You should be good to dev. Write me at taylorpoe@gmail.com if you can't get it going.
+
+#### Other Funkiness
+Chrome Extensions are a bit funky to develop in general.
+
+**background.js**
+Tabs are saved in the `background.js` file, which runs in a secure environment. To access a console for this environment, go to `chrome://extensions/` in your browser and find the MonoTab app. Make sure to first Reload the extension (must be done every time you change background.js). Then — to access the console, click `background page` in the `Inspect Views` section.
+
+**content.js**
+This environment runs on all webpages except for the new tab page
+
+**monoTab.js**
+This environment runs on the new tab page
+
+#### Other Notes
+* Please PR against staging unless we've talked about shooting straight to master.
+* Please do not update the `manifest.js` file.
+
+----
 
 # The Why
 
