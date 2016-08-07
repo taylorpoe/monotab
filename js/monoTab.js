@@ -556,7 +556,7 @@ function createList(id, title, linksItems, count) {
   var list =
     '<div class="list">'+
       '<div class="list-title">'+
-        '<span class="title-field" contenteditable="true" name="'+id+'">'+title+'</span>'+
+        '<span class="title-field" placeholder="Title Me Please" contenteditable="true" name="'+id+'">'+title+'</span>'+
         '<div class="goofwrap">&nbsp;('+
           '<span class="count-holster">'+
             '<span class="count">'+ count +'</span>'+
