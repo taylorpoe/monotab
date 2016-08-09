@@ -21,7 +21,7 @@ $(document).ready(function() {
   $('body').on('click', '.hi', handleAboutClick)
   $('body').on('click', '.banner', closeBanner)
   $('body').on('change blur', '#header-text', saveHeaderText)
-  $('body').on('keydown', '#header-text', resizeHeaderText)
+  $('body').on('keydown paste', '#header-text', resizeHeaderText)
   $('body').on('change blur', '.title-field', saveListName)
   $('body').on('keydown', '.title-field', checkForReturnKey)
   $(document).mousedown(function() { s.mouseIsDown = true })
