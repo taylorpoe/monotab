@@ -673,29 +673,20 @@ function resizeHeaderText(e) {
     }
   }
 
-  var numWords = headerText.val().split(" ").length
+  // Exponential backoff on font size based on number of characters in the header
+  function characterCountToFontSize(n) {
+    var words = n / 5.00
+    var max = 130
+    var min = 20
+    var offset = 15
+    var value = (1 / (words * 0.002)) + offset
+    value = Math.max(value, min)
+    value = Math.min(value, max)
+    return value
+  }
 
-  if ((numWords >= 1) && (numWords < 3)) {
-    headerText.css("font-size", "120px")
-  }
-  else if ((numWords >= 3) && (numWords < 5)) {
-    headerText.css("font-size", "90px")
-  }
-  else if ((numWords >= 3) && (numWords < 10)) {
-    headerText.css("font-size", "70px")
-  }
-  else if ((numWords >= 10) && (numWords < 15)) {
-    headerText.css("font-size", "50px")
-  }
-  else if ((numWords >= 20) && (numWords < 27)) {
-    headerText.css("font-size", "40px")
-  }
-  else if ((numWords >= 30) && (numWords < 40)) {
-    headerText.css("font-size", "33px")
-  }
-  else {
-    headerText.css("font-size", "20px")
-  }
+  var numChar = headerText.val().length;
+  headerText.css("font-size", characterCountToFontSize(numChar)+"px")
 }
 
 function handleContainerWidth(listLength) {
