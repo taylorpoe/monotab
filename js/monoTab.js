@@ -273,8 +273,8 @@ function handleLinkClick(e) {
 function handleNavClick() {
   var list = $(this).data('list')
   $('.lists-container-housing').stop().animate({
-		scrollLeft: $('#' + list).offset().left
-	}, 920, 'easeOutQuad')
+    scrollLeft: $('#' + list).offset().left
+  }, 920, 'easeOutQuad')
 }
 
 function handleScrimClick() {
@@ -362,7 +362,7 @@ function saveSort(el) {
           id: $this.data('link-id'),
           url:  $this.attr('href'),
           title: $this.data('title'),
-          date: $this.data('date')
+          rawDate: $this.data('date')
         }
         sortedLinks.push(linkObj)
       })
@@ -599,7 +599,7 @@ function createListItems(link) {
   }
 
   var linkUI =
-    '<a class="link ' +warningClass+ '" data-link-id="' +link.id+'" href="' +link.url+ '" data-date="' +date+ '" data-title="' +link.title+ '">' +
+    '<a class="link ' +warningClass+ '" data-link-id="' +link.id+'" href="' +link.url+ '" data-date="' +rawDate+ '" data-title="' +link.title+ '">' +
     favicon +
     titleTruced +
       '<div class="tooltip">' +
