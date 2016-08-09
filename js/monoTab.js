@@ -676,7 +676,7 @@ function resizeHeaderText(e) {
   // Exponential backoff on font size based on number of characters in the header
   function characterCountToFontSize(n) {
     var words = n / 5.00
-    var max = 130
+    var max = 120
     var min = 20
     var offset = 15
     var value = (1 / (words * 0.002)) + offset
